@@ -18,6 +18,7 @@ Thirdparty/g2o/build/
 Thirdparty/g2o/config.h
 Thirdparty/g2o/lib/
 Examples/ROS/ORB_SLAM2/Vocabulary/
+project.pro.user
 build/
 *~
 lib/
