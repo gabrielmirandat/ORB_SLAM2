@@ -29,9 +29,9 @@
 namespace ORB_SLAM2
 {
 
-System::System(const string &strVocFile, const string &strSettingsFile, const eSensor sensor,
-               const bool bUseViewer):mSensor(sensor), mpViewer(static_cast<Viewer*>(NULL)), mbReset(false),mbActivateLocalizationMode(false),
-        mbDeactivateLocalizationMode(false)
+System::System(const string &strVocFile, const string &strSettingsFile, const eSensor sensor, const bool bUseViewer)
+:mSensor(sensor), mpViewer(static_cast<Viewer*>(NULL)), mbReset(false),mbActivateLocalizationMode(false),
+ mbDeactivateLocalizationMode(false)
 {
     // Output welcome message
     cout << endl <<
@@ -119,7 +119,7 @@ cv::Mat System::TrackStereo(const cv::Mat &imLeft, const cv::Mat &imRight, const
     {
         cerr << "ERROR: you called TrackStereo but input sensor was not set to STEREO." << endl;
         exit(-1);
-    }   
+    }
 
     // Check mode change
     {
@@ -170,7 +170,7 @@ cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const doub
     {
         cerr << "ERROR: you called TrackRGBD but input sensor was not set to RGBD." << endl;
         exit(-1);
-    }    
+    }
 
     // Check mode change
     {
