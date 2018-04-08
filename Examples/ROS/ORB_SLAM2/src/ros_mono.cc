@@ -26,6 +26,7 @@
 
 #include<ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
 
 #include<opencv2/core/core.hpp>
 
@@ -36,11 +37,11 @@ using namespace std;
 class ImageGrabber
 {
 public:
-    ImageGrabber(ORB_SLAM2::System* pSLAM):mpSLAM(pSLAM){}
+    ORB_SLAM2::System* mpSLAM;
+    ImageGrabber(ORB_SLAM2::System* pSLAM)
+        :mpSLAM(pSLAM){}
 
     void GrabImage(const sensor_msgs::ImageConstPtr& msg);
-
-    ORB_SLAM2::System* mpSLAM;
 };
 
 int main(int argc, char **argv)
@@ -60,8 +61,9 @@ int main(int argc, char **argv)
 
     ImageGrabber igb(&SLAM);
 
-    ros::NodeHandle nodeHandler;
-    ros::Subscriber sub = nodeHandler.subscribe("/camera/image_raw", 1, &ImageGrabber::GrabImage,&igb);
+    ros::NodeHandle nh;
+    image_transport::ImageTransport it(nh);
+    image_transport::Subscriber sub = it.subscribe("/camera/image/grayscale", 1, &ImageGrabber::GrabImage,&igb);
 
     ros::spin();
 
