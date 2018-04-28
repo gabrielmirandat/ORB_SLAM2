@@ -11,7 +11,8 @@ DEPENDPATH = include
 
 CONFIG -= app_bundle
 
-HEADERS += include/*.h
+HEADERS += include/*.h \
+    include/constants.h
 
 SOURCES += src/*.cc \
 		   Examples/ROS/ORB_SLAM2/src/*.cc
