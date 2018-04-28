@@ -37,8 +37,29 @@ class KeyFrame;
 
 class Map
 {
+
+protected:
+    std::set<MapPoint*> mspMapPoints;
+    std::set<KeyFrame*> mspKeyFrames;
+
+    std::vector<MapPoint*> mvpReferenceMapPoints;
+
+    long unsigned int mnMaxKFid;
+
+    // Index related to a big change in the map (loop closure, global BA)
+    int mnBigChangeIdx;
+
+    std::mutex mMutexMap;
+
 public:
     Map();
+
+    vector<KeyFrame*> mvpKeyFrameOrigins;
+
+    std::mutex mMutexMapUpdate;
+
+    // This avoid that two points are created simultaneously in separate threads (id conflict)
+    std::mutex mMutexPointCreation;
 
     void AddKeyFrame(KeyFrame* pKF);
     void AddMapPoint(MapPoint* pMP);
@@ -58,26 +79,6 @@ public:
     long unsigned int GetMaxKFid();
 
     void clear();
-
-    vector<KeyFrame*> mvpKeyFrameOrigins;
-
-    std::mutex mMutexMapUpdate;
-
-    // This avoid that two points are created simultaneously in separate threads (id conflict)
-    std::mutex mMutexPointCreation;
-
-protected:
-    std::set<MapPoint*> mspMapPoints;
-    std::set<KeyFrame*> mspKeyFrames;
-
-    std::vector<MapPoint*> mvpReferenceMapPoints;
-
-    long unsigned int mnMaxKFid;
-
-    // Index related to a big change in the map (loop closure, global BA)
-    int mnBigChangeIdx;
-
-    std::mutex mMutexMap;
 };
 
 } //namespace ORB_SLAM

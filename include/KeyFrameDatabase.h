@@ -41,9 +41,21 @@ class Frame;
 
 class KeyFrameDatabase
 {
+
+protected:
+
+  // Associated vocabulary
+  const ORBVocabulary* mpVoc;
+
+  // Inverted file
+  std::vector<list<KeyFrame*> > mvInvertedFile;
+
+  // Mutex
+  std::mutex mMutex;
+
 public:
 
-    KeyFrameDatabase(const ORBVocabulary &voc);
+   KeyFrameDatabase(const ORBVocabulary &voc);
 
    void add(KeyFrame* pKF);
 
@@ -56,17 +68,6 @@ public:
 
    // Relocalization
    std::vector<KeyFrame*> DetectRelocalizationCandidates(Frame* F);
-
-protected:
-
-  // Associated vocabulary
-  const ORBVocabulary* mpVoc;
-
-  // Inverted file
-  std::vector<list<KeyFrame*> > mvInvertedFile;
-
-  // Mutex
-  std::mutex mMutex;
 };
 
 } //namespace ORB_SLAM

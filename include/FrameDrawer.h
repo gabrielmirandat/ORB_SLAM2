@@ -39,18 +39,8 @@ class Viewer;
 
 class FrameDrawer
 {
-public:
-    FrameDrawer(Map* pMap);
-
-    // Update info from the last processed frame.
-    void Update(Tracking *pTracker);
-
-    // Draw last processed frame.
-    cv::Mat DrawFrame();
 
 protected:
-
-    void DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText);
 
     // Info of the frame to be drawn
     cv::Mat mIm;
@@ -66,6 +56,17 @@ protected:
     Map* mpMap;
 
     std::mutex mMutex;
+
+    void DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText);
+
+public:
+    FrameDrawer(Map* pMap);
+
+    // Update info from the last processed frame.
+    void Update(Tracking *pTracker);
+
+    // Draw last processed frame.
+    cv::Mat DrawFrame();
 };
 
 } //namespace ORB_SLAM

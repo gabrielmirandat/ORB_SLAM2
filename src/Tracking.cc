@@ -37,6 +37,8 @@
 
 #include<mutex>
 
+#include"constants.h"
+
 
 using namespace std;
 
@@ -237,6 +239,8 @@ cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const d
 
 cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
 {
+    // cout << "TRACKING::GRABIMAGEMONOCULAR" << endl;
+
     mImGray = im;
 
     if(mImGray.channels()==3)
@@ -266,6 +270,8 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
 
 void Tracking::Track()
 {
+    // cout << "TRACKING:TRACK" << endl;
+
     if(mState==NO_IMAGES_YET)
     {
         mState = NOT_INITIALIZED;
@@ -562,11 +568,12 @@ void Tracking::StereoInitialization()
 
 void Tracking::MonocularInitialization()
 {
+    // cout << "TRACKING:MONOCULARINITIZATION" << endl;
 
     if(!mpInitializer)
     {
         // Set Reference Frame
-        if(mCurrentFrame.mvKeys.size()>100)
+        if(mCurrentFrame.mvKeys.size()>trackingMonocularInitializationKeysSize)
         {
             mInitialFrame = Frame(mCurrentFrame);
             mLastFrame = Frame(mCurrentFrame);
@@ -636,6 +643,8 @@ void Tracking::MonocularInitialization()
 
 void Tracking::CreateInitialMapMonocular()
 {
+    // cout << "CREATEINITIALMAPMONOCULAR" << endl;
+
     // Create KeyFrames
     KeyFrame* pKFini = new KeyFrame(mInitialFrame,mpMap,mpKeyFrameDB);
     KeyFrame* pKFcur = new KeyFrame(mCurrentFrame,mpMap,mpKeyFrameDB);
@@ -756,6 +765,8 @@ void Tracking::CheckReplacedInLastFrame()
 
 bool Tracking::TrackReferenceKeyFrame()
 {
+    // cout << "TRACKING::TRACKREFERENCEKEYFRAME" << endl;
+
     // Compute Bag of Words vector
     mCurrentFrame.ComputeBoW();
 
@@ -866,6 +877,8 @@ void Tracking::UpdateLastFrame()
 
 bool Tracking::TrackWithMotionModel()
 {
+    // cout << "TRACKING::TRACKWITHMOTIONMODEL" << endl;
+
     ORBmatcher matcher(0.9,true);
 
     // Update last frame pose according to its reference keyframe

@@ -53,29 +53,7 @@ class System;
 class Tracking
 {  
 
-public:
-    Tracking(System* pSys, ORBVocabulary* pVoc, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Map* pMap,
-             KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor);
-
-    // Preprocess the input and call Track(). Extract features and performs stereo matching.
-    cv::Mat GrabImageStereo(const cv::Mat &imRectLeft,const cv::Mat &imRectRight, const double &timestamp);
-    cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp);
-    cv::Mat GrabImageMonocular(const cv::Mat &im, const double &timestamp);
-
-    void SetLocalMapper(LocalMapping* pLocalMapper);
-    void SetLoopClosing(LoopClosing* pLoopClosing);
-    void SetViewer(Viewer* pViewer);
-
-    // Load new settings
-    // The focal lenght should be similar or scale prediction will fail when projecting points
-    // TODO: Modify MapPoint::PredictScale to take into account focal lenght
-    void ChangeCalibration(const string &strSettingPath);
-
-    // Use this function if you have deactivated local mapping and you only want to localize the camera.
-    void InformOnlyTracking(const bool &flag);
-
-
-public:
+public: // private??
 
     // Tracking states
     enum eTrackingState{
@@ -116,34 +94,6 @@ public:
     void Reset();
 
 protected:
-
-    // Main tracking function. It is independent of the input sensor.
-    void Track();
-
-    // Map initialization for stereo and RGB-D
-    void StereoInitialization();
-
-    // Map initialization for monocular
-    void MonocularInitialization();
-    void CreateInitialMapMonocular();
-
-    void CheckReplacedInLastFrame();
-    bool TrackReferenceKeyFrame();
-    void UpdateLastFrame();
-    bool TrackWithMotionModel();
-
-    bool Relocalization();
-
-    void UpdateLocalMap();
-    void UpdateLocalPoints();
-    void UpdateLocalKeyFrames();
-
-    bool TrackLocalMap();
-    void SearchLocalPoints();
-
-    bool NeedNewKeyFrame();
-    void CreateNewKeyFrame();
-
     // In case of performing only localization, this flag is true when there are no matches to
     // points in the map. Still tracking will continue if there are enough matches with temporal points.
     // In that case we are doing visual odometry. The system will try to do relocalization to recover
@@ -169,10 +119,10 @@ protected:
     KeyFrame* mpReferenceKF;
     std::vector<KeyFrame*> mvpLocalKeyFrames;
     std::vector<MapPoint*> mvpLocalMapPoints;
-    
+
     // System
     System* mpSystem;
-    
+
     //Drawers
     Viewer* mpViewer;
     FrameDrawer* mpFrameDrawer;
@@ -214,6 +164,55 @@ protected:
     bool mbRGB;
 
     list<MapPoint*> mlpTemporalPoints;
+
+    // Main tracking function. It is independent of the input sensor.
+    void Track();
+
+    // Map initialization for stereo and RGB-D
+    void StereoInitialization();
+
+    // Map initialization for monocular
+    void MonocularInitialization();
+    void CreateInitialMapMonocular();
+
+    void CheckReplacedInLastFrame();
+    bool TrackReferenceKeyFrame();
+    void UpdateLastFrame();
+    bool TrackWithMotionModel();
+
+    bool Relocalization();
+
+    void UpdateLocalMap();
+    void UpdateLocalPoints();
+    void UpdateLocalKeyFrames();
+
+    bool TrackLocalMap();
+    void SearchLocalPoints();
+
+    bool NeedNewKeyFrame();
+    void CreateNewKeyFrame();
+
+public:
+    Tracking(System* pSys, ORBVocabulary* pVoc, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Map* pMap,
+             KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor);
+
+    // Preprocess the input and call Track(). Extract features and performs stereo matching.
+    cv::Mat GrabImageStereo(const cv::Mat &imRectLeft,const cv::Mat &imRectRight, const double &timestamp);
+    cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp);
+    cv::Mat GrabImageMonocular(const cv::Mat &im, const double &timestamp);
+
+    void SetLocalMapper(LocalMapping* pLocalMapper);
+    void SetLoopClosing(LoopClosing* pLoopClosing);
+    void SetViewer(Viewer* pViewer);
+
+    // Load new settings
+    // The focal lenght should be similar or scale prediction will fail when projecting points
+    // TODO: Modify MapPoint::PredictScale to take into account focal lenght
+    void ChangeCalibration(const string &strSettingPath);
+
+    // Use this function if you have deactivated local mapping and you only want to localize the camera.
+    void InformOnlyTracking(const bool &flag);
+
 };
 
 } //namespace ORB_SLAM
